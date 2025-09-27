@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import ChartWidget from './components/ChartWidget'
+import ProgressTracker from './components/ProgressTracker'
+import AITipsWidget from './components/AITipsWidget'
 import { 
   DollarSign, 
   TrendingUp, 
@@ -9,7 +11,9 @@ import {
   Target, 
   AlertCircle,
   Plus,
-  Eye
+  Eye,
+  BookOpen,
+  Brain
 } from 'lucide-react'
 import { api } from './utils/api'
 
@@ -21,6 +25,7 @@ export default function Dashboard() {
   const [goals, setGoals] = useState([])
   const [aiAdvice, setAiAdvice] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [userProgress, setUserProgress] = useState({})
 
   useEffect(() => {
     const token = localStorage.getItem('token')
@@ -64,6 +69,14 @@ export default function Dashboard() {
         })
         setAiAdvice(adviceResponse.data.advice)
       }
+
+      // Mock user progress - in real app, this would come from API
+      setUserProgress({
+        completedLessons: 3,
+        totalLessons: 10,
+        completedQuizzes: 2,
+        totalQuizzes: 5
+      })
     } catch (error) {
       console.error('Error loading dashboard data:', error)
     } finally {
@@ -199,6 +212,16 @@ export default function Dashboard() {
           </div>
         </div>
 
+        {/* Progress Tracker */}
+        <div className="mb-8">
+          <ProgressTracker 
+            userProgress={userProgress}
+            totalLessons={10}
+            completedQuizzes={userProgress.completedQuizzes}
+            totalQuizzes={5}
+          />
+        </div>
+
         {/* Charts and AI Advice */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           {/* Expense Breakdown */}
@@ -216,39 +239,15 @@ export default function Dashboard() {
           />
         </div>
 
-        {/* AI Advice and Goals */}
+        {/* Enhanced AI Tips and Goals */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* AI Advice */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-              <AlertCircle className="h-5 w-5 text-primary-600 mr-2" />
-              AI Financial Advice
-            </h3>
-            {aiAdvice ? (
-              <div className="space-y-4">
-                {aiAdvice.tips && aiAdvice.tips.length > 0 && (
-                  <div>
-                    <h4 className="font-medium text-gray-900 mb-2">💡 Tips</h4>
-                    <ul className="space-y-1">
-                      {aiAdvice.tips.map((tip, index) => (
-                        <li key={index} className="text-sm text-gray-600 flex items-start">
-                          <span className="text-primary-600 mr-2">•</span>
-                          {tip}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                {aiAdvice.encouragement && (
-                  <div className="bg-primary-50 p-3 rounded-lg">
-                    <p className="text-sm text-primary-800">{aiAdvice.encouragement}</p>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <p className="text-gray-500">No advice available. Add some transactions to get personalized tips!</p>
-            )}
-          </div>
+          {/* Enhanced AI Tips */}
+          <AITipsWidget 
+            budgetData={budget}
+            spendingData={summary}
+            goals={goals}
+            onRefresh={loadDashboardData}
+          />
 
           {/* Savings Goals */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
@@ -299,6 +298,48 @@ export default function Dashboard() {
               </div>
             )}
           </div>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <button
+            onClick={() => router.push('/lessons')}
+            className="bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg p-4 text-left transition-colors"
+          >
+            <div className="flex items-center space-x-3">
+              <BookOpen className="h-8 w-8 text-blue-600" />
+              <div>
+                <h3 className="font-semibold text-blue-900">Continue Learning</h3>
+                <p className="text-sm text-blue-700">Complete your next lesson</p>
+              </div>
+            </div>
+          </button>
+
+          <button
+            onClick={() => router.push('/quiz')}
+            className="bg-green-50 hover:bg-green-100 border border-green-200 rounded-lg p-4 text-left transition-colors"
+          >
+            <div className="flex items-center space-x-3">
+              <Brain className="h-8 w-8 text-green-600" />
+              <div>
+                <h3 className="font-semibold text-green-900">Take a Quiz</h3>
+                <p className="text-sm text-green-700">Test your knowledge</p>
+              </div>
+            </div>
+          </button>
+
+          <button
+            onClick={() => router.push('/budget')}
+            className="bg-purple-50 hover:bg-purple-100 border border-purple-200 rounded-lg p-4 text-left transition-colors"
+          >
+            <div className="flex items-center space-x-3">
+              <Plus className="h-8 w-8 text-purple-600" />
+              <div>
+                <h3 className="font-semibold text-purple-900">Add Transaction</h3>
+                <p className="text-sm text-purple-700">Track your spending</p>
+              </div>
+            </div>
+          </button>
         </div>
       </div>
     </div>

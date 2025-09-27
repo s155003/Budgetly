@@ -2,13 +2,16 @@ import { useState, useEffect } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import LessonCard from './components/LessonCard'
+import ProgressTracker from './components/ProgressTracker'
 import { 
   BookOpen, 
   Filter, 
   Search, 
   Trophy,
   Clock,
-  CheckCircle2
+  CheckCircle2,
+  Award,
+  Target
 } from 'lucide-react'
 
 export default function Lessons() {
@@ -197,26 +200,40 @@ export default function Lessons() {
         </div>
 
         {/* Progress Overview */}
-        <div className="bg-gradient-to-r from-primary-600 to-primary-700 rounded-lg p-6 mb-8 text-white">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-xl font-semibold mb-2">Your Learning Progress</h2>
-              <p className="text-primary-100">
-                {getCompletedCount()} of {getTotalLessons()} lessons completed
-              </p>
-            </div>
-            <div className="text-right">
-              <div className="text-3xl font-bold">
-                {Math.round((getCompletedCount() / getTotalLessons()) * 100)}%
-              </div>
-              <div className="text-primary-100">Complete</div>
+        <div className="mb-8">
+          <ProgressTracker 
+            userProgress={{ completedLessons: getCompletedCount() }}
+            totalLessons={getTotalLessons()}
+            completedQuizzes={2}
+            totalQuizzes={5}
+          />
+        </div>
+
+        {/* Learning Path */}
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold text-gray-900 flex items-center">
+              <Target className="h-5 w-5 text-primary-600 mr-2" />
+              Your Learning Path
+            </h2>
+            <div className="flex items-center space-x-2">
+              <Award className="h-4 w-4 text-yellow-500" />
+              <span className="text-sm text-gray-600">Level {Math.floor(getCompletedCount() / 2) + 1}</span>
             </div>
           </div>
-          <div className="mt-4 w-full bg-primary-500 rounded-full h-2">
-            <div 
-              className="bg-white h-2 rounded-full transition-all duration-300"
-              style={{ width: `${(getCompletedCount() / getTotalLessons()) * 100}%` }}
-            />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="text-center p-4 bg-green-50 rounded-lg">
+              <div className="text-2xl font-bold text-green-600">{getCompletedCount()}</div>
+              <div className="text-sm text-green-700">Lessons Completed</div>
+            </div>
+            <div className="text-center p-4 bg-blue-50 rounded-lg">
+              <div className="text-2xl font-bold text-blue-600">2</div>
+              <div className="text-sm text-blue-700">Quizzes Passed</div>
+            </div>
+            <div className="text-center p-4 bg-purple-50 rounded-lg">
+              <div className="text-2xl font-bold text-purple-600">{getTotalLessons() - getCompletedCount()}</div>
+              <div className="text-sm text-purple-700">Lessons Remaining</div>
+            </div>
           </div>
         </div>
 

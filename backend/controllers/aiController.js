@@ -10,7 +10,9 @@ const getBudgetAdvice = async (req, res) => {
     const { budget_data, spending_data, goals } = req.body;
 
     if (!process.env.OPENAI_API_KEY) {
-      return res.status(500).json({ error: 'AI service not configured' });
+      // Enhanced fallback advice
+      const fallbackAdvice = generateFallbackAdvice(budget_data, spending_data, goals);
+      return res.json({ advice: fallbackAdvice });
     }
 
     const prompt = `
@@ -181,6 +183,68 @@ Format as JSON:
     console.error('AI quiz generation error:', error);
     res.status(500).json({ error: 'Failed to generate quiz questions' });
   }
+};
+
+const generateFallbackAdvice = (budgetData, spendingData, goals) => {
+  const tips = [];
+  const concerns = [];
+  const savingsStrategies = [];
+  
+  // Analyze spending patterns
+  if (spendingData && Array.isArray(spendingData)) {
+    const totalExpenses = spendingData
+      .filter(item => item.type === 'expense')
+      .reduce((sum, item) => sum + parseFloat(item.total_amount || 0), 0);
+    
+    const monthlyIncome = budgetData?.monthly_income || 0;
+    
+    if (monthlyIncome > 0) {
+      const savingsRate = ((monthlyIncome - totalExpenses) / monthlyIncome) * 100;
+      
+      if (savingsRate < 10) {
+        concerns.push("Your savings rate is below the recommended 10-20%");
+        savingsStrategies.push("Try the 50/30/20 rule: 50% needs, 30% wants, 20% savings");
+      }
+      
+      if (totalExpenses > monthlyIncome) {
+        concerns.push("Your expenses exceed your income this month");
+        tips.push("Review your largest expense categories and identify areas to cut back");
+      }
+    }
+    
+    // Find highest expense category
+    const expenseCategories = spendingData.filter(item => item.type === 'expense');
+    if (expenseCategories.length > 0) {
+      const highest = expenseCategories.sort((a, b) => 
+        parseFloat(b.total_amount || 0) - parseFloat(a.total_amount || 0)
+      )[0];
+      
+      tips.push(`Your highest expense category is ${highest.category_name}. Look for optimization opportunities here.`);
+    }
+  }
+  
+  // Add general tips if no specific data
+  if (tips.length === 0) {
+    tips.push(
+      "Start with tracking all your expenses for a month to understand your spending patterns",
+      "Build an emergency fund of $1,000 as your first financial goal",
+      "Automate your savings to make it easier to stick to your goals"
+    );
+  }
+  
+  if (savingsStrategies.length === 0) {
+    savingsStrategies.push(
+      "Set up automatic transfers to savings on payday",
+      "Use the envelope method for discretionary spending categories"
+    );
+  }
+  
+  return {
+    tips,
+    concerns,
+    savings_strategies: savingsStrategies,
+    encouragement: "Every small step toward better financial habits counts. Keep learning and stay consistent!"
+  };
 };
 
 module.exports = {

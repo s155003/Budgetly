@@ -9,7 +9,9 @@ import {
   LogOut, 
   Menu, 
   X,
-  DollarSign
+  DollarSign,
+  Brain,
+  Trophy
 } from 'lucide-react';
 
 const NavBar = () => {
@@ -35,6 +37,8 @@ const NavBar = () => {
     { href: '/dashboard', label: 'Dashboard', icon: Home },
     { href: '/lessons', label: 'Lessons', icon: BookOpen },
     { href: '/budget', label: 'Budget', icon: BarChart3 },
+    { href: '/quiz', label: 'Quiz', icon: Brain },
+    { href: '/achievements', label: 'Achievements', icon: Trophy },
     { href: '/account', label: 'Account', icon: User },
   ];
 
