@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Brain, Lightbulb, TrendingUp, AlertCircle, RefreshCw } from 'lucide-react';
+import { Brain, Lightbulb, TrendingUp, CircleAlert as AlertCircle, RefreshCw } from 'lucide-react';
 
 const AITipsWidget = ({ budgetData, spendingData, goals, onRefresh }) => {
   const [tips, setTips] = useState([]);

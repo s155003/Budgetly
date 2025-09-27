@@ -1,20 +1,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { 
-  Home, 
-  BookOpen, 
-  BarChart3, 
-  User, 
-  LogOut, 
-  Menu, 
-  X,
-  DollarSign,
-  Brain,
-  Trophy
-} from 'lucide-react';
-
-const NavBar = () => {
+import { Hop as Home, BookOpen, ChartBar as BarChart3, User, LogOut, Menu, X, DollarSign, Brain, Trophy } from 'lucide-react'avBar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState(null);
   const router = useRouter();
@@ -38,7 +25,6 @@ const NavBar = () => {
     { href: '/lessons', label: 'Lessons', icon: BookOpen },
     { href: '/budget', label: 'Budget', icon: BarChart3 },
     { href: '/quiz', label: 'Quiz', icon: Brain },
-    { href: '/achievements', label: 'Achievements', icon: Trophy },
     { href: '/account', label: 'Account', icon: User },
   ];
 

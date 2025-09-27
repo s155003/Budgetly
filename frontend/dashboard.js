@@ -4,17 +4,7 @@ import { useRouter } from 'next/router'
 import ChartWidget from './components/ChartWidget'
 import ProgressTracker from './components/ProgressTracker'
 import AITipsWidget from './components/AITipsWidget'
-import { 
-  DollarSign, 
-  TrendingUp, 
-  TrendingDown, 
-  Target, 
-  AlertCircle,
-  Plus,
-  Eye,
-  BookOpen,
-  Brain
-} from 'lucide-react'
+import { DollarSign, TrendingUp, TrendingDown, Target, CircleAlert as AlertCircle, Plus, Eye, BookOpen, Brain } from 'lucide-react'
 import { api } from './utils/api'
 
 export default function Dashboard() {

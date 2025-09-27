@@ -3,16 +3,7 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import LessonCard from './components/LessonCard'
 import ProgressTracker from './components/ProgressTracker'
-import { 
-  BookOpen, 
-  Filter, 
-  Search, 
-  Trophy,
-  Clock,
-  CheckCircle2,
-  Award,
-  Target
-} from 'lucide-react'
+import { BookOpen, ListFilter as Filter, Search, Trophy, Clock, CircleCheck as CheckCircle2, Award, Target } from 'lucide-react'
 
 export default function Lessons() {
   const router = useRouter()
